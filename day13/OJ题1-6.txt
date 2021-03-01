@@ -1,0 +1,176 @@
+1、https://leetcode-cn.com/problems/remove-linked-list-elements/description/ [删除链表中等于给定值 val 的所有节点]
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+struct ListNode* removeElements(struct ListNode* head, int val)
+{
+    if(head == NULL)
+        return NULL;
+    struct ListNode *p = head;
+    struct ListNode *pre = NULL; //要删除节点前驱节点
+   
+    while(p != NULL)
+    {
+        if(p->val == val)
+        {
+            if(pre == NULL)
+                head = p->next;
+            else
+                pre->next = p->next;
+            free(p);
+        }
+        else
+            pre = p;
+            
+        if(pre == NULL)
+            p = head;
+        else
+            p = pre->next;
+    }
+    return head;
+}
+
+2、https://leetcode-cn.com/problems/reverse-linked-list/description/ [反转链表]
+struct ListNode* reverseList(struct ListNode* head)
+{
+    if(head==NULL || head->next==NULL)  
+        return head;
+    struct ListNode *p = head->next;
+    head->next = NULL;
+
+    while(p != NULL)
+    {
+        struct ListNode *q = p->next;
+        p->next = head;
+        head = p;
+
+        p = q;
+    }
+    return head;
+}
+
+3、https://leetcode-cn.com/problems/middle-of-the-linked-list/description/ [链表的中间结点]
+//常规解法
+int GetLengthOfList(struct ListNode *head)
+{
+    int len = 0;
+    while(head != NULL)
+    {
+        len++;
+        head = head->next;
+    }
+    return len;
+}
+
+struct ListNode* middleNode(struct ListNode* head)
+{
+    int len = GetLengthOfList(head);
+    struct ListNode *p = head;
+    for(int i=0; i<len/2; ++i)
+        p = p->next;
+    return p;
+}
+//快慢指针法
+struct ListNode* middleNode(struct ListNode* head)
+{
+    struct ListNode *fast, *slow;
+    fast = slow = head;
+    while(fast && fast->next!=NULL)
+    {
+        fast = fast->next->next;
+        slow = slow->next;
+    }
+    return slow;
+}
+
+4、https://www.nowcoder.com/practice/529d3ae5a407492994ad2a246518148a?tpId=13&&tqId=11167&rp=2&ru=/activity/oj&qru=/ta/coding-interviews/question-ranking [倒数的第K个节点]
+/**
+ * struct ListNode {
+ *	int val;
+ *	struct ListNode *next;
+ * };
+ */
+
+/**
+ * 
+ * @param pListHead ListNode类 
+ * @param k int整型 
+ * @return ListNode类
+ */
+
+struct ListNode* FindKthToTail(struct ListNode* pListHead, int k ) 
+{
+    if(pListHead == NULL)
+        return NULL;
+    struct ListNode *fast, *slow;
+    fast = slow = pListHead;
+    while(k-- > 0)
+    {
+        if(fast == NULL)//用于判断是否超出节点的个数
+            return NULL;
+        fast = fast->next;
+    }
+    
+    while(fast != NULL)
+    {
+        fast = fast->next;
+        slow = slow->next;
+    }
+    return slow;
+}
+
+5、https://leetcode-cn.com/problems/merge-two-sorted-lists/description/ [合并两个有序链表]
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+struct ListNode* mergeTwoLists(struct ListNode* l1, struct ListNode* l2)
+{
+    if(l1==NULL && l2==NULL)
+        return NULL;
+    if(l1 == NULL)
+        return l2;
+    if(l2 == NULL)
+        return l1;
+    
+    struct ListNode *head;
+    if(l1->val < l2->val)
+    {
+        head = l1;
+        l1 = l1->next;
+    }
+    else    
+    {
+        head = l2;
+        l2 = l2->next;
+    }
+    struct ListNode *tail = head;
+    while(l1!=NULL && l2!=NULL)
+    {
+        if(l1->val < l2->val)
+        {
+            tail->next = l1;
+            l1 = l1->next;
+        }
+        else
+        {
+            tail->next = l2;
+            l2 = l2->next;
+        }
+        tail = tail->next;
+    }
+    if(l1 != NULL)
+        tail->next = l1;
+    if(l2 != NULL)
+        tail->next = l2;
+    return head;
+}
